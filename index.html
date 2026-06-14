@@ -489,11 +489,11 @@ const EVENING_TASKS = [
 ];
 
 const MOODS = {
-  happy:   { label: '開心系', words: ['雀躍','滿足','感激','輕鬆','興奮','驕傲','溫暖'] },
-  calm:    { label: '平靜系', words: ['平和','專注','清醒','空靈','寧靜'] },
-  low:     { label: '低落系', words: ['疲憊','空洞','憂鬱','失落','孤獨','無力','沉重','無法動彈'] },
-  anxious: { label: '焦慮系', words: ['緊張','擔憂','煩躁','不安','壓迫','混亂','壓力','無法呼吸'] },
-  angry:   { label: '憤怒系', words: ['挫敗','委屈','憤怒','厭倦','反感'] },
+  happy:   { label: '開心系', words: [['雀躍','🎉'],['滿足','😌'],['感激','🙏'],['輕鬆','😮‍💨'],['興奮','🤩'],['驕傲','💪'],['溫暖','🤗']] },
+  calm:    { label: '平靜系', words: [['平和','🌿'],['專注','🎯'],['清醒','✨'],['空靈','🌙'],['寧靜','🍃']] },
+  low:     { label: '低落系', words: [['疲憊','😮‍💨'],['空洞','🫥'],['憂鬱','🌧️'],['失落','🍂'],['孤獨','🫙'],['無力','🪫'],['沉重','🪨'],['無法動彈','💤']] },
+  anxious: { label: '焦慮系', words: [['緊張','😬'],['擔憂','😟'],['煩躁','😤'],['不安','🌀'],['壓迫','😮'],['混亂','🌪️'],['壓力','🫠'],['無法呼吸','😶‍🌫️']] },
+  angry:   { label: '憤怒系', words: [['挫敗','😞'],['委屈','😢'],['憤怒','😡'],['厭倦','😒'],['反感','🤢']] },
 };
 
 const WEEKDAYS = ['日','一','二','三','四','五','六'];
@@ -506,7 +506,10 @@ function todayKey() {
 
 function getState() {
   const raw = localStorage.getItem('peiyo_state');
-  return raw ? JSON.parse(raw) : { tasks: {}, diary: {} };
+  const s = raw ? JSON.parse(raw) : {};
+  if (!s.tasks) s.tasks = {};
+  if (!s.diary) s.diary = {};
+  return s;
 }
 
 function saveState(s) {
@@ -536,6 +539,8 @@ function toggleTaskDone(id, event) {
   renderTasksFull();
   renderHome();
 }
+
+function setTaskDone(id) {
   const s = getState();
   const k = todayKey();
   if (!s.tasks[k]) s.tasks[k] = {};
@@ -799,7 +804,7 @@ function renderDiaryScreen() {
 
   // restore today's diary if exists
   const s = getState();
-  const td = s.diary[todayKey()];
+  const td = (s.diary || {})[todayKey()];
   if (td) {
     document.getElementById('diary-text').value = td.text || '';
     selectedWords = new Set(td.words || []);
@@ -818,8 +823,10 @@ function renderMoodWords() {
   const words = MOODS[selectedMoodCat].words;
   const container = document.getElementById('mood-words');
   container.className = `mood-words cat-${selectedMoodCat}`;
-  container.innerHTML = words.map(w => `
-    <div class="mood-word ${selectedWords.has(w)?'selected':''}" onclick="toggleWord('${w}', this)">${w}</div>
+  container.innerHTML = words.map(([w, emoji]) => `
+    <div class="mood-word ${selectedWords.has(w)?'selected':''}" onclick="toggleWord('${w}', this)">
+      <span style="margin-right:5px">${emoji}</span>${w}
+    </div>
   `).join('');
 }
 
