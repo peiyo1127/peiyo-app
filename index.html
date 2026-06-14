@@ -191,8 +191,58 @@
     cursor: pointer;
     border: 0.5px solid transparent;
     transition: all 0.2s;
+    position: relative;
+    overflow: visible;
+    user-select: none;
   }
   .mood-word.selected { border-color: currentColor; }
+  .mood-word.pop {
+    animation: wordPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes wordPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+  .mood-word.unselect-shake {
+    animation: wordShake 0.3s ease;
+  }
+  @keyframes wordShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* PARTICLE */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    border-radius: 50%;
+    animation: particleFly 0.6s ease-out forwards;
+    z-index: 999;
+  }
+  @keyframes particleFly {
+    0% { opacity: 1; transform: scale(1) translate(0,0); }
+    100% { opacity: 0; transform: scale(0) translate(var(--dx), var(--dy)); }
+  }
+
+  /* TASK MANUAL CHECK */
+  .task-check-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--muted);
+    background: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .task-check-btn.done {
+    background: rgba(93,202,165,0.2);
+    border-color: var(--accent2);
+  }
 
   /* COLOR per mood category */
   .cat-happy .mood-word { background: rgba(250,199,117,0.15); color: #FAC775; }
@@ -470,7 +520,22 @@ function getTodayTasks() {
 
 function getAllTasks() { return [...TASKS, ...EVENING_TASKS]; }
 
-function setTaskDone(id) {
+function toggleTaskDone(id, event) {
+  event.stopPropagation();
+  const s = getState();
+  const k = todayKey();
+  if (!s.tasks[k]) s.tasks[k] = {};
+  if (s.tasks[k][id]) {
+    delete s.tasks[k][id];
+    showToast('已取消完成');
+  } else {
+    s.tasks[k][id] = true;
+    showToast('已標記完成 ✓');
+  }
+  saveState(s);
+  renderTasksFull();
+  renderHome();
+}
   const s = getState();
   const k = todayKey();
   if (!s.tasks[k]) s.tasks[k] = {};
@@ -574,35 +639,43 @@ function updateSleepCountdown() {
 function renderTasksFull() {
   const done = getTodayTasks();
   const morningHTML = TASKS.map((t, i) => {
-    const locked = i > 0 && !done[TASKS[i-1].id];
+    const isDone = !!done[t.id];
+    const locked = i > 0 && !done[TASKS[i-1].id] && !isDone;
     return `
-    <div class="card task-item ${done[t.id] ? 'done' : locked ? '' : 'active'}"
+    <div class="card task-item ${isDone ? 'done' : locked ? '' : 'active'}"
       onclick="${locked ? "showToast('請先完成上一項任務')" : `goTimer('${t.id}')`}"
       style="margin-bottom:12px; cursor:${locked?'default':'pointer'}">
-      <div class="task-icon" style="background:${done[t.id]?'rgba(93,202,165,0.15)':locked?'rgba(255,255,255,0.04)':'rgba(127,119,221,0.15)'}">
+      <div class="task-icon" style="background:${isDone?'rgba(93,202,165,0.15)':locked?'rgba(255,255,255,0.04)':'rgba(127,119,221,0.15)'}">
         ${t.emoji}
       </div>
       <div class="task-info">
         <div class="task-name">${locked ? '🔒 ' : ''}${t.name}</div>
         <div class="task-dur">${t.dur} 分鐘 · ${t.desc}</div>
       </div>
-      <div class="task-status">${done[t.id] ? '✅' : locked ? '' : '▶'}</div>
+      <button class="task-check-btn ${isDone?'done':''}" onclick="toggleTaskDone('${t.id}', event)" title="${isDone?'取消完成':'標記完成'}">
+        ${isDone ? '✓' : ''}
+      </button>
     </div>`;
   }).join('');
 
-  const eveningHTML = EVENING_TASKS.map(t => `
-    <div class="card task-item ${done[t.id] ? 'done' : 'active'}"
+  const eveningHTML = EVENING_TASKS.map(t => {
+    const isDone = !!done[t.id];
+    return `
+    <div class="card task-item ${isDone ? 'done' : 'active'}"
       onclick="goTimer('${t.id}')"
       style="margin-bottom:12px;">
-      <div class="task-icon" style="background:${done[t.id]?'rgba(93,202,165,0.15)':'rgba(250,199,117,0.12)'}">
+      <div class="task-icon" style="background:${isDone?'rgba(93,202,165,0.15)':'rgba(250,199,117,0.12)'}">
         ${t.emoji}
       </div>
       <div class="task-info">
         <div class="task-name">${t.name}</div>
         <div class="task-dur">${t.dur} 分鐘 · ${t.desc}</div>
       </div>
-      <div class="task-status">${done[t.id] ? '✅' : '▶'}</div>
-    </div>`).join('');
+      <button class="task-check-btn ${isDone?'done':''}" onclick="toggleTaskDone('${t.id}', event)" title="${isDone?'取消完成':'標記完成'}">
+        ${isDone ? '✓' : ''}
+      </button>
+    </div>`;
+  }).join('');
 
   document.getElementById('task-list-full').innerHTML = `
     <div class="section-title">晨間</div>
@@ -743,16 +816,41 @@ function selectCat(k) {
 
 function renderMoodWords() {
   const words = MOODS[selectedMoodCat].words;
-  document.getElementById('mood-words').className = `mood-words cat-${selectedMoodCat}`;
-  document.getElementById('mood-words').innerHTML = words.map(w => `
-    <div class="mood-word ${selectedWords.has(w)?'selected':''}" onclick="toggleWord('${w}')">${w}</div>
+  const container = document.getElementById('mood-words');
+  container.className = `mood-words cat-${selectedMoodCat}`;
+  container.innerHTML = words.map(w => `
+    <div class="mood-word ${selectedWords.has(w)?'selected':''}" onclick="toggleWord('${w}', this)">${w}</div>
   `).join('');
 }
 
-function toggleWord(w) {
-  if (selectedWords.has(w)) selectedWords.delete(w);
-  else selectedWords.add(w);
-  renderMoodWords();
+function spawnParticles(el, color) {
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = (i / 8) * Math.PI * 2;
+    const dist = 28 + Math.random() * 20;
+    p.style.cssText = `left:${cx}px;top:${cy}px;width:6px;height:6px;background:${color};--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;`;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 650);
+  }
+}
+
+function toggleWord(w, el) {
+  const colors = { happy:'#FAC775', calm:'#5dcaa5', low:'#afa9ec', anxious:'#f09577', angry:'#f09595' };
+  if (selectedWords.has(w)) {
+    selectedWords.delete(w);
+    el.classList.remove('selected');
+    el.classList.add('unselect-shake');
+    setTimeout(() => el.classList.remove('unselect-shake'), 300);
+  } else {
+    selectedWords.add(w);
+    el.classList.add('selected', 'pop');
+    spawnParticles(el, colors[selectedMoodCat] || '#fff');
+    setTimeout(() => el.classList.remove('pop'), 350);
+  }
 }
 
 function saveDiary() {
