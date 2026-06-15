@@ -3,369 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" content="#1C1814">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Peiyo 日常</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #0f0f1a;
-    --bg2: #1a1a2e;
-    --bg3: #252540;
-    --card: #1e1e35;
-    --border: rgba(255,255,255,0.08);
-    --text: #f0eff5;
-    --muted: #8887a0;
-    --accent: #7f77dd;
-    --accent2: #5dcaa5;
-    --accent3: #d85a30;
-    --radius: 16px;
-    --radius-sm: 10px;
-  }
+:root {
+  --bg: #1C1814;
+  --bg2: #252019;
+  --bg3: #302820;
+  --card: #211C17;
+  --border: rgba(255,230,200,0.08);
+  --text: #EDE3D8;
+  --muted: #9A8572;
+  --accent: #C4905A;
+  --accent2: #7FAF8A;
+  --accent3: #D4A86A;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, 'Noto Sans TC', sans-serif;
-    min-height: 100vh;
-    max-width: 430px;
-    margin: 0 auto;
-    padding-bottom: 80px;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Noto Sans TC', sans-serif;
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  padding-bottom: 72px;
+}
 
-  .screen { display: none; padding: 20px; }
-  .screen.active { display: block; }
+.screen { display: none; padding: 20px; }
+.screen.active { display: block; }
 
-  /* NAV */
-  .nav {
-    position: fixed;
-    bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 430px;
-    background: var(--bg2);
-    border-top: 0.5px solid var(--border);
-    display: flex;
-    padding: 8px 0 20px;
-    z-index: 100;
-  }
-  .nav-btn {
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 11px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    padding: 6px 0;
-    transition: color 0.2s;
-  }
-  .nav-btn.active { color: var(--accent); }
-  .nav-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav {
+  position: fixed;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 8px 0 20px;
+  z-index: 100;
+}
+.nav-btn {
+  flex: 1; background: none; border: none; color: var(--muted);
+  font-size: 11px; display: flex; flex-direction: column; align-items: center;
+  gap: 3px; cursor: pointer; padding: 6px 0; transition: color 0.2s; letter-spacing: 0.03em;
+}
+.nav-btn.active { color: var(--accent); }
+.nav-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* HEADER */
-  .header { padding: 20px 0 8px; }
-  .header-date { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
-  .header-title { font-size: 24px; font-weight: 600; }
+.header { padding: 24px 0 12px; }
+.header-date { font-size: 12px; color: var(--muted); margin-bottom: 4px; letter-spacing: 0.05em; }
+.header-title { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
 
-  /* CARDS */
-  .card {
-    background: var(--card);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    margin-bottom: 12px;
-  }
-  .card-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow);
+}
+.card-label { font-size: 11px; color: var(--muted); margin-bottom: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
 
-  /* PROGRESS RING */
-  .progress-ring-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 0;
-  }
-  .ring-container { position: relative; width: 140px; height: 140px; }
-  .ring-container svg { transform: rotate(-90deg); }
-  .ring-center {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .ring-time { font-size: 28px; font-weight: 600; }
-  .ring-label { font-size: 12px; color: var(--muted); }
+.progress-ring-wrap { display: flex; align-items: center; justify-content: center; padding: 20px 0; }
+.ring-container { position: relative; width: 120px; height: 120px; }
+.ring-container svg { transform: rotate(-90deg); }
+.ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring-time { font-size: 24px; font-weight: 600; color: var(--text); }
+.ring-label { font-size: 11px; color: var(--muted); letter-spacing: 0.03em; }
 
-  /* TASKS */
-  .task-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 0.5px solid var(--border);
-    cursor: pointer;
-  }
-  .task-item:last-child { border-bottom: none; }
-  .task-icon {
-    width: 40px; height: 40px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .task-info { flex: 1; }
-  .task-name { font-size: 15px; font-weight: 500; }
-  .task-dur { font-size: 13px; color: var(--muted); margin-top: 2px; }
-  .task-status { font-size: 20px; }
-  .task-item.done .task-name { color: var(--muted); }
-  .task-item.active .task-icon { box-shadow: 0 0 0 2px var(--accent); }
+.task-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+.task-item:last-child { border-bottom: none; }
+.task-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: var(--bg2); }
+.task-info { flex: 1; }
+.task-name { font-size: 14px; font-weight: 500; }
+.task-dur { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.task-item.done .task-name { color: var(--muted); text-decoration: line-through; }
 
-  /* TASK TIMER SCREEN */
-  .timer-hero {
-    text-align: center;
-    padding: 40px 0 32px;
-  }
-  .timer-emoji { font-size: 56px; margin-bottom: 16px; }
-  .timer-name { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
-  .timer-sub { font-size: 14px; color: var(--muted); }
-  .timer-display {
-    text-align: center;
-    font-size: 72px;
-    font-weight: 300;
-    letter-spacing: -2px;
-    margin: 20px 0 32px;
-    font-variant-numeric: tabular-nums;
-  }
-  .timer-bar-wrap { background: var(--bg3); border-radius: 99px; height: 6px; margin-bottom: 32px; }
-  .timer-bar { height: 6px; border-radius: 99px; background: var(--accent); transition: width 1s linear; }
-  .timer-btns { display: flex; gap: 12px; justify-content: center; }
-  .btn {
-    border: none;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 500;
-    padding: 14px 28px;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-secondary { background: var(--bg3); color: var(--text); }
-  .btn-success { background: var(--accent2); color: #0a2a1e; }
-  .btn-full { width: 100%; }
+.timer-hero { text-align: center; padding: 32px 0 20px; }
+.timer-emoji { font-size: 48px; margin-bottom: 12px; }
+.timer-name { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.timer-sub { font-size: 13px; color: var(--muted); }
+.timer-display { text-align: center; font-size: 64px; font-weight: 300; letter-spacing: -2px; margin: 16px 0 24px; font-variant-numeric: tabular-nums; }
+.timer-bar-wrap { background: var(--bg3); border-radius: 99px; height: 4px; margin-bottom: 24px; }
+.timer-bar { height: 4px; border-radius: 99px; background: var(--accent); transition: width 1s linear; }
+.timer-btns { display: flex; gap: 10px; justify-content: center; }
 
-  /* MOOD / WHEEL */
-  .mood-categories { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .mood-cat-btn {
-    border: 0.5px solid var(--border);
-    border-radius: 99px;
-    background: var(--bg3);
-    color: var(--muted);
-    font-size: 13px;
-    padding: 7px 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .mood-cat-btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(127,119,221,0.12);
-  }
-  .mood-words {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    min-height: 60px;
-    margin-bottom: 20px;
-  }
-  .mood-word {
-    border-radius: 99px;
-    padding: 7px 14px;
-    font-size: 13px;
-    cursor: pointer;
-    border: 0.5px solid transparent;
-    transition: all 0.2s;
-    position: relative;
-    overflow: visible;
-    user-select: none;
-  }
-  .mood-word.selected { border-color: currentColor; }
-  .mood-word.pop {
-    animation: wordPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  @keyframes wordPop {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.25); }
-    100% { transform: scale(1); }
-  }
-  .mood-word.unselect-shake {
-    animation: wordShake 0.3s ease;
-  }
-  @keyframes wordShake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
-    100% { transform: translateX(0); }
-  }
+.btn { border: none; border-radius: var(--radius); font-size: 14px; font-weight: 500; padding: 12px 24px; cursor: pointer; transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.02em; }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-secondary { background: var(--bg2); color: var(--text); border: 1px solid var(--border); }
+.btn-success { background: var(--accent2); color: #fff; }
+.btn-full { width: 100%; }
 
-  /* PARTICLE */
-  .particle {
-    position: fixed;
-    pointer-events: none;
-    border-radius: 50%;
-    animation: particleFly 0.6s ease-out forwards;
-    z-index: 999;
-  }
-  @keyframes particleFly {
-    0% { opacity: 1; transform: scale(1) translate(0,0); }
-    100% { opacity: 0; transform: scale(0) translate(var(--dx), var(--dy)); }
-  }
+.mood-categories { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.mood-cat-btn { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg2); color: var(--muted); font-size: 12px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+.mood-cat-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(166,124,91,0.08); }
+.mood-words { display: flex; flex-wrap: wrap; gap: 6px; min-height: 44px; margin-bottom: 4px; }
+.mood-word { border-radius: var(--radius-sm); padding: 6px 12px; font-size: 12px; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; user-select: none; }
+.mood-word.selected { border-color: currentColor; }
+.mood-word.pop { animation: wordPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes wordPop { 0%{transform:scale(1)} 40%{transform:scale(1.2)} 100%{transform:scale(1)} }
 
-  /* TASK MANUAL CHECK */
-  .task-check-btn {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    border: 1.5px solid var(--muted);
-    background: none;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-    transition: all 0.2s;
-  }
-  .task-check-btn.done {
-    background: rgba(93,202,165,0.2);
-    border-color: var(--accent2);
-  }
+.particle { position: fixed; pointer-events: none; border-radius: 50%; animation: particleFly 0.6s ease-out forwards; z-index: 999; }
+@keyframes particleFly { 0%{opacity:1;transform:scale(1) translate(0,0)} 100%{opacity:0;transform:scale(0) translate(var(--dx),var(--dy))} }
 
-  /* COLOR per mood category */
-  .cat-happy .mood-word { background: rgba(250,199,117,0.15); color: #FAC775; }
-  .cat-happy .mood-word.selected { background: rgba(250,199,117,0.25); }
-  .cat-calm .mood-word { background: rgba(93,202,165,0.15); color: var(--accent2); }
-  .cat-calm .mood-word.selected { background: rgba(93,202,165,0.25); }
-  .cat-low .mood-word { background: rgba(127,119,221,0.15); color: #afa9ec; }
-  .cat-low .mood-word.selected { background: rgba(127,119,221,0.25); }
-  .cat-anxious .mood-word { background: rgba(216,90,48,0.15); color: #f09577; }
-  .cat-anxious .mood-word.selected { background: rgba(216,90,48,0.25); }
-  .cat-angry .mood-word { background: rgba(224,75,74,0.15); color: #f09595; }
-  .cat-angry .mood-word.selected { background: rgba(224,75,74,0.25); }
+.task-check-btn { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--muted); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; transition: all 0.2s; color: white; }
+.task-check-btn.done { background: var(--accent2); border-color: var(--accent2); }
 
-  /* DIARY */
-  textarea {
-    width: 100%;
-    background: var(--bg3);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.7;
-    padding: 14px;
-    resize: none;
-    font-family: inherit;
-    min-height: 160px;
-  }
-  textarea:focus { outline: none; border-color: var(--accent); }
+.cat-happy .mood-word { background: rgba(196,168,130,0.15); color: #7A5830; }
+.cat-happy .mood-word.selected { background: rgba(196,168,130,0.3); }
+.cat-calm .mood-word { background: rgba(123,158,135,0.15); color: #3E7055; }
+.cat-calm .mood-word.selected { background: rgba(123,158,135,0.3); }
+.cat-low .mood-word { background: rgba(140,125,114,0.15); color: #5A4E46; }
+.cat-low .mood-word.selected { background: rgba(140,125,114,0.3); }
+.cat-anxious .mood-word { background: rgba(180,120,90,0.15); color: #8A4A30; }
+.cat-anxious .mood-word.selected { background: rgba(180,120,90,0.3); }
+.cat-angry .mood-word { background: rgba(180,100,90,0.15); color: #8A3530; }
+.cat-angry .mood-word.selected { background: rgba(180,100,90,0.3); }
 
-  /* HISTORY */
-  .history-day {
-    border-radius: var(--radius);
-    border: 0.5px solid var(--border);
-    background: var(--card);
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .history-day-header {
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-  }
-  .history-date { font-size: 14px; font-weight: 500; }
-  .history-meta { font-size: 13px; color: var(--muted); }
-  .history-body { padding: 0 16px 14px; border-top: 0.5px solid var(--border); display: none; }
-  .history-body.open { display: block; }
-  .history-moods { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 10px; }
-  .history-mood-tag { background: var(--bg3); border-radius: 99px; padding: 4px 12px; font-size: 12px; color: var(--muted); }
-  .history-text { font-size: 14px; line-height: 1.7; color: var(--muted); }
+textarea { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; line-height: 1.7; padding: 12px; resize: none; font-family: inherit; min-height: 140px; }
+textarea:focus { outline: none; border-color: var(--accent); }
 
-  /* SLEEP REMINDER */
-  .sleep-card {
-    background: linear-gradient(135deg, #1a1a3e, #2a1a3e);
-    border: 0.5px solid rgba(127,119,221,0.3);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 12px;
-    text-align: center;
-  }
-  .sleep-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-  .sleep-sub { font-size: 13px; color: var(--muted); }
-  .sleep-time { font-size: 36px; font-weight: 300; letter-spacing: -1px; color: var(--accent); margin: 12px 0; }
+.history-day { border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); margin-bottom: 8px; overflow: hidden; box-shadow: var(--shadow); }
+.history-day-header { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.history-date { font-size: 13px; font-weight: 500; }
+.history-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.history-body { padding: 0 16px 14px; border-top: 1px solid var(--border); display: none; }
+.history-body.open { display: block; }
+.history-moods { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0 6px; }
+.history-mood-tag { background: var(--bg2); border-radius: var(--radius-sm); padding: 3px 10px; font-size: 11px; color: var(--muted); }
+.history-text { font-size: 13px; line-height: 1.7; color: var(--muted); margin-top: 6px; }
 
-  /* STREAK */
-  .streak-row { display: flex; gap: 6px; justify-content: center; margin: 8px 0; }
-  .streak-dot { width: 28px; height: 28px; border-radius: 8px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); }
-  .streak-dot.done { background: rgba(93,202,165,0.25); color: var(--accent2); }
+.sleep-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
+.sleep-title { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.sleep-time { font-size: 32px; font-weight: 300; letter-spacing: -1px; color: var(--accent); margin: 6px 0; }
+.sleep-sub { font-size: 12px; color: var(--muted); }
+.countdown-bar-wrap { background: var(--bg3); border-radius: 99px; height: 3px; margin-top: 10px; }
+.countdown-bar { height: 3px; border-radius: 99px; background: var(--accent); }
 
-  /* SECTION TITLE */
-  .section-title { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; margin-top: 24px; }
+.streak-row { display: flex; gap: 5px; justify-content: center; }
+.streak-dot { width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); font-weight: 500; border: 1px solid var(--border); }
+.streak-dot.done { background: rgba(123,158,135,0.15); color: var(--accent2); border-color: rgba(123,158,135,0.3); }
 
-  /* SAVE BTN */
-  .save-area { margin-top: 20px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; margin-top: 20px; }
+.save-area { margin-top: 16px; }
 
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 100px;
-    left: 50%; transform: translateX(-50%);
-    background: var(--accent2);
-    color: #0a2a1e;
-    border-radius: 99px;
-    padding: 10px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    z-index: 200;
-    white-space: nowrap;
-  }
-  .toast.show { opacity: 1; }
+.toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--card); border-radius: 6px; padding: 8px 18px; font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; white-space: nowrap; }
+.toast.show { opacity: 1; }
 
-  /* SLEEP COUNTDOWN */
-  .countdown-bar-wrap { background: var(--bg3); border-radius: 99px; height: 4px; margin-top: 12px; }
-  .countdown-bar { height: 4px; border-radius: 99px; background: var(--accent); }
+.checkin-card { border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow); gap: 12px; margin-bottom: 10px; }
+.checkin-card.done { border-color: rgba(123,158,135,0.3); background: rgba(123,158,135,0.05); }
+.checkin-info { flex: 1; min-width: 0; }
+.checkin-label { font-size: 13px; font-weight: 500; }
+.checkin-time-text { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.checkin-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.time-input { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 13px; font-family: inherit; padding: 6px 8px; width: 86px; }
+.time-input:focus { outline: none; border-color: var(--accent); }
+.checkin-btn { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 7px 12px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.checkin-edit-btn { background: none; color: var(--muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 12px; cursor: pointer; flex-shrink: 0; }
 
-  /* CHECKIN BTN */
-  .checkin-card {
-    border-radius: var(--radius);
-    border: 0.5px solid var(--border);
-    background: var(--card);
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .checkin-card.done { border-color: rgba(93,202,165,0.3); background: rgba(93,202,165,0.06); }
-  .checkin-info { font-size: 14px; }
-  .checkin-time { font-size: 12px; color: var(--muted); margin-top: 3px; }
-  .checkin-btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 8px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-  .checkin-btn.done { background: rgba(93,202,165,0.2); color: var(--accent2); }
+input[type="number"] { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; padding: 8px 10px; text-align: center; font-family: inherit; }
+input[type="number"]:focus { outline: none; border-color: var(--accent); }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); text-align: center; }
+.stat-value { font-size: 22px; font-weight: 600; color: var(--accent); letter-spacing: -0.5px; }
+.stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
+.chart-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 8px; box-shadow: var(--shadow); }
+.chart-title { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 14px; }
+.chart-legend { display: flex; gap: 14px; margin-top: 10px; }
+.legend-item { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.legend-line { width: 16px; height: 2px; flex-shrink: 0; }
+
+.actual-badge { font-size: 11px; color: var(--accent2); background: rgba(123,158,135,0.12); border-radius: 3px; padding: 1px 5px; margin-left: 5px; font-weight: 400; }
+
+.phone-ban { background: rgba(166,124,91,0.06); border: 1px solid rgba(166,124,91,0.2); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -379,44 +196,46 @@
 
   <div class="progress-ring-wrap">
     <div class="ring-container">
-      <svg width="140" height="140" viewBox="0 0 140 140">
-        <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
-        <circle id="ring-progress" cx="70" cy="70" r="58" fill="none" stroke="#7f77dd" stroke-width="10"
-          stroke-linecap="round" stroke-dasharray="364" stroke-dashoffset="364"/>
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="var(--bg3)" stroke-width="8"/>
+        <circle id="ring-progress" cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="8"
+          stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"/>
       </svg>
       <div class="ring-center">
         <div class="ring-time" id="home-time"></div>
-        <div class="ring-label" id="ring-label">今日完成</div>
+        <div class="ring-label">今日完成</div>
       </div>
     </div>
   </div>
 
-  <div class="section-title">今日任務</div>
-  <div id="wakeup-checkin" style="margin-bottom:12px"></div>
+  <div class="section-title">起床打卡</div>
+  <div id="wakeup-checkin"></div>
+
+  <div class="section-title">晨間任務</div>
   <div class="card" id="task-list-home"></div>
 
   <div class="sleep-card">
-    <div class="sleep-title">🌙 今晚睡覺目標</div>
+    <div class="sleep-title">今晚目標</div>
     <div class="sleep-time">23:30</div>
     <div class="sleep-sub" id="sleep-countdown-text"></div>
     <div class="countdown-bar-wrap"><div class="countdown-bar" id="sleep-bar" style="width:0%"></div></div>
   </div>
 
   <div id="phone-ban-card" style="display:none">
-    <div class="card" style="border-color:rgba(216,90,48,0.4); background:rgba(216,90,48,0.08);">
-      <div style="font-size:18px; margin-bottom:6px;">📵 放下手機了嗎？</div>
-      <div style="font-size:14px; color:var(--muted); line-height:1.6">現在是 22:30，距離睡覺還有一小時。<br>把手機放到充電器，去做睡前打坐。</div>
+    <div class="phone-ban">
+      <div style="font-size:14px;font-weight:600;margin-bottom:5px">📵 放下手機</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6">現在是 22:30，距離睡覺還有一小時。<br>把手機放到充電器，去做睡前打坐。</div>
     </div>
   </div>
 
   <div class="section-title">晚間任務</div>
   <div class="card" id="evening-task-list-home"></div>
-  <div id="sleep-checkin" style="margin-bottom:12px"></div>
 
-  <div class="section-title">本週連續</div>
-  <div class="card">
-    <div class="streak-row" id="streak-row"></div>
-  </div>
+  <div class="section-title">睡覺打卡</div>
+  <div id="sleep-checkin"></div>
+
+  <div class="section-title">本週</div>
+  <div class="card"><div class="streak-row" id="streak-row"></div></div>
 </div>
 
 <!-- TASKS -->
@@ -438,13 +257,13 @@
   <div class="timer-display" id="timer-display">00:00</div>
   <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar" style="width:100%"></div></div>
   <div class="timer-btns">
-    <button class="btn btn-secondary" id="timer-reset-btn" onclick="resetTimer()">重置</button>
+    <button class="btn btn-secondary" onclick="resetTimer()">重置</button>
     <button class="btn btn-primary" id="timer-start-btn" onclick="toggleTimer()">開始</button>
   </div>
-  <div style="margin-top: 16px;">
-    <button class="btn btn-success btn-full" id="timer-done-btn" onclick="completeTask()" style="display:none">✓ 完成，繼續下一項</button>
+  <div style="margin-top:12px">
+    <button class="btn btn-success btn-full" onclick="completeTask()">✓ 完成</button>
   </div>
-  <div style="margin-top: 12px;">
+  <div style="margin-top:8px">
     <button class="btn btn-secondary btn-full" onclick="showScreen('screen-tasks')">← 回任務列表</button>
   </div>
 </div>
@@ -455,45 +274,40 @@
     <div class="header-date" id="diary-date"></div>
     <div class="header-title">今天怎麼樣？</div>
   </div>
-
   <div class="card">
-    <div class="card-label">心情分類</div>
+    <div class="card-label">心情</div>
     <div class="mood-categories" id="mood-cats"></div>
-    <div class="card-label">選擇感受（可複選）</div>
     <div class="mood-words" id="mood-words"></div>
   </div>
-
   <div class="card">
     <div class="card-label">手機使用時間</div>
-    <div style="display:flex; flex-direction:column; gap:12px;">
+    <div style="display:flex;flex-direction:column;gap:10px">
       <div>
-        <div style="font-size:13px; color:var(--muted); margin-bottom:6px;">📱 總使用時間</div>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <input type="number" id="phone-total-h" min="0" max="24" placeholder="0" style="width:64px; background:var(--bg3); border:0.5px solid var(--border); border-radius:8px; color:var(--text); font-size:15px; padding:8px 10px; text-align:center;">
-          <span style="color:var(--muted); font-size:13px;">小時</span>
-          <input type="number" id="phone-total-m" min="0" max="59" placeholder="0" style="width:64px; background:var(--bg3); border:0.5px solid var(--border); border-radius:8px; color:var(--text); font-size:15px; padding:8px 10px; text-align:center;">
-          <span style="color:var(--muted); font-size:13px;">分鐘</span>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">📱 總使用時間</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="number" id="phone-total-h" min="0" max="24" placeholder="0" style="width:56px">
+          <span style="color:var(--muted);font-size:12px">小時</span>
+          <input type="number" id="phone-total-m" min="0" max="59" placeholder="0" style="width:56px">
+          <span style="color:var(--muted);font-size:12px">分鐘</span>
         </div>
       </div>
       <div>
-        <div style="font-size:13px; color:var(--muted); margin-bottom:6px;">📲 社群使用時間</div>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <input type="number" id="phone-social-h" min="0" max="24" placeholder="0" style="width:64px; background:var(--bg3); border:0.5px solid var(--border); border-radius:8px; color:var(--text); font-size:15px; padding:8px 10px; text-align:center;">
-          <span style="color:var(--muted); font-size:13px;">小時</span>
-          <input type="number" id="phone-social-m" min="0" max="59" placeholder="0" style="width:64px; background:var(--bg3); border:0.5px solid var(--border); border-radius:8px; color:var(--text); font-size:15px; padding:8px 10px; text-align:center;">
-          <span style="color:var(--muted); font-size:13px;">分鐘</span>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">📲 社群使用時間</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="number" id="phone-social-h" min="0" max="24" placeholder="0" style="width:56px">
+          <span style="color:var(--muted);font-size:12px">小時</span>
+          <input type="number" id="phone-social-m" min="0" max="59" placeholder="0" style="width:56px">
+          <span style="color:var(--muted);font-size:12px">分鐘</span>
         </div>
       </div>
     </div>
   </div>
-
   <div class="card">
-    <div class="card-label">今天做了什麼 / 想說的話</div>
+    <div class="card-label">今天</div>
     <textarea id="diary-text" placeholder="隨意寫，不限格式..."></textarea>
   </div>
-
   <div class="save-area">
-    <button class="btn btn-primary btn-full" onclick="saveDiary()">儲存今天的日記</button>
+    <button class="btn btn-primary btn-full" onclick="saveDiary()">儲存</button>
   </div>
 </div>
 
@@ -501,576 +315,523 @@
 <div class="screen" id="screen-history">
   <div class="header">
     <div class="header-date">回顧</div>
-    <div class="header-title">過去紀錄</div>
+    <div class="header-title">紀錄</div>
   </div>
+  <div id="stats-section"></div>
+  <div class="section-title" style="margin-top:24px">每日紀錄</div>
   <div id="history-list"></div>
 </div>
 
 <!-- NAV -->
 <nav class="nav">
-  <button class="nav-btn active" id="nav-home" onclick="showScreen('screen-home'); setNav('nav-home')">
-    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    首頁
+  <button class="nav-btn active" id="nav-home" onclick="showScreen('screen-home');setNav('nav-home')">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>首頁
   </button>
-  <button class="nav-btn" id="nav-tasks" onclick="showScreen('screen-tasks'); setNav('nav-tasks'); renderTasksFull()">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    任務
+  <button class="nav-btn" id="nav-tasks" onclick="showScreen('screen-tasks');setNav('nav-tasks');renderTasksFull()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>任務
   </button>
-  <button class="nav-btn" id="nav-diary" onclick="showScreen('screen-diary'); setNav('nav-diary')">
-    <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    日記
+  <button class="nav-btn" id="nav-diary" onclick="showScreen('screen-diary');setNav('nav-diary')">
+    <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>日記
   </button>
-  <button class="nav-btn" id="nav-history" onclick="showScreen('screen-history'); setNav('nav-history'); renderHistory()">
-    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    紀錄
+  <button class="nav-btn" id="nav-history" onclick="showScreen('screen-history');setNav('nav-history');renderHistory()">
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>紀錄
   </button>
 </nav>
 
 <div class="toast" id="toast"></div>
 
 <script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxY2gBIw331BLyKaOCAHq_kwy36ggBcjOHwgiUmHl1gjyC4rOSwZnC0-xvRMyJ2lkPb/exec';
+
 const TASKS = [
-  { id: 'zhanzhuang', name: '站樁', dur: 10, emoji: '🧍', desc: '自然站立，感受重心', type: 'morning' },
-  { id: 'zuochan',   name: '打坐', dur: 20, emoji: '🧘', desc: '靜心，觀察呼吸', type: 'morning' },
-  { id: 'sanbu',     name: '散步', dur: 30, emoji: '🚶', desc: '出門走半小時', type: 'morning' },
+  { id:'zhanzhuang', name:'站樁', dur:10, emoji:'🧍', desc:'自然站立，感受重心', type:'morning' },
+  { id:'zuochan',    name:'打坐', dur:20, emoji:'🧘', desc:'靜心，觀察呼吸',     type:'morning' },
+  { id:'sanbu',      name:'散步', dur:30, emoji:'🚶', desc:'出門走半小時',       type:'morning' },
 ];
-
 const EVENING_TASKS = [
-  { id: 'eve_zuochan', name: '睡前打坐', dur: 20, emoji: '🌙', desc: '放下今天，準備入眠', type: 'evening' },
+  { id:'eve_zuochan', name:'睡前打坐', dur:20, emoji:'🌙', desc:'放下今天，準備入眠', type:'evening' },
 ];
-
 const MOODS = {
-  happy:   { label: '開心系', words: [['雀躍','🎉'],['滿足','😌'],['感激','🙏'],['輕鬆','😮‍💨'],['興奮','🤩'],['驕傲','💪'],['溫暖','🤗']] },
-  calm:    { label: '平靜系', words: [['平和','🌿'],['專注','🎯'],['清醒','✨'],['空靈','🌙'],['寧靜','🍃']] },
-  low:     { label: '低落系', words: [['疲憊','😮‍💨'],['空洞','🫥'],['憂鬱','🌧️'],['失落','🍂'],['孤獨','🫙'],['無力','🪫'],['沉重','🪨'],['無法動彈','💤']] },
-  anxious: { label: '焦慮系', words: [['緊張','😬'],['擔憂','😟'],['煩躁','😤'],['不安','🌀'],['壓迫','😮'],['混亂','🌪️'],['壓力','🫠'],['無法呼吸','😶‍🌫️']] },
-  angry:   { label: '憤怒系', words: [['挫敗','😞'],['委屈','😢'],['憤怒','😡'],['厭倦','😒'],['反感','🤢']] },
+  happy:   { label:'開心', words:[['雀躍','🎉'],['滿足','😌'],['感激','🙏'],['輕鬆','😮‍💨'],['興奮','🤩'],['驕傲','💪'],['溫暖','🤗']] },
+  calm:    { label:'平靜', words:[['平和','🌿'],['專注','🎯'],['清醒','✨'],['空靈','🌙'],['寧靜','🍃']] },
+  low:     { label:'低落', words:[['疲憊','😮‍💨'],['空洞','🫥'],['憂鬱','🌧️'],['失落','🍂'],['孤獨','🫙'],['無力','🪫'],['沉重','🪨'],['無法動彈','💤']] },
+  anxious: { label:'焦慮', words:[['緊張','😬'],['擔憂','😟'],['煩躁','😤'],['不安','🌀'],['壓迫','😮'],['混亂','🌪️'],['壓力','🫠'],['無法呼吸','😶‍🌫️']] },
+  angry:   { label:'憤怒', words:[['挫敗','😞'],['委屈','😢'],['憤怒','😡'],['厭倦','😒'],['反感','🤢']] },
 };
-
 const WEEKDAYS = ['日','一','二','三','四','五','六'];
-const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const MONTHS   = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
 function todayKey() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-
+function formatCurrentTime() {
+  const n = new Date();
+  return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+}
 function getState() {
-  const raw = localStorage.getItem('peiyo_state');
-  const s = raw ? JSON.parse(raw) : {};
+  const s = JSON.parse(localStorage.getItem('peiyo_state') || '{}');
   if (!s.tasks) s.tasks = {};
   if (!s.diary) s.diary = {};
   return s;
 }
-
-function saveState(s) {
-  localStorage.setItem('peiyo_state', JSON.stringify(s));
-}
-
-function getTodayTasks() {
-  const s = getState();
-  return s.tasks[todayKey()] || {};
-}
-
+function saveState(s) { localStorage.setItem('peiyo_state', JSON.stringify(s)); }
+function getTodayTasks() { return getState().tasks[todayKey()] || {}; }
 function getAllTasks() { return [...TASKS, ...EVENING_TASKS]; }
+function isDone(v) { return v === true || (v && v.done === true); }
+function getActual(v, def) { return (v && v.actual) ? v.actual : def; }
 
-function toggleTaskDone(id, event) {
-  event.stopPropagation();
-  const s = getState();
-  const k = todayKey();
+function toggleTaskDone(id, e) {
+  e.stopPropagation();
+  const s = getState(), k = todayKey();
   if (!s.tasks[k]) s.tasks[k] = {};
-  if (s.tasks[k][id]) {
-    delete s.tasks[k][id];
-    showToast('已取消完成');
-  } else {
-    s.tasks[k][id] = true;
-    showToast('已標記完成 ✓');
-  }
-  saveState(s);
-  renderTasksFull();
-  renderHome();
+  if (isDone(s.tasks[k][id])) { delete s.tasks[k][id]; showToast('已取消'); }
+  else { s.tasks[k][id] = true; showToast('已完成 ✓'); }
+  saveState(s); renderTasksFull(); renderHome();
 }
-
-function setTaskDone(id) {
-  const s = getState();
-  const k = todayKey();
+function setTaskDone(id, actual) {
+  const s = getState(), k = todayKey();
   if (!s.tasks[k]) s.tasks[k] = {};
-  s.tasks[k][id] = true;
+  s.tasks[k][id] = actual ? { done:true, actual } : true;
   saveState(s);
 }
+function countDone() { const d = getTodayTasks(); return TASKS.filter(t => isDone(d[t.id])).length; }
 
-function countDone() {
-  const done = getTodayTasks();
-  return TASKS.filter(t => done[t.id]).length;
-}
-
-function countEveningDone() {
-  const done = getTodayTasks();
-  return EVENING_TASKS.filter(t => done[t.id]).length;
-}
-
-// HOME
+// ─── HOME ───────────────────────────────────────────
 function renderHome() {
-  const now = new Date();
-  const h = now.getHours();
-  const greeting = h < 12 ? '早安 ☀️' : h < 18 ? '午安 🌤' : '晚安 🌙';
+  const now = new Date(), h = now.getHours();
   document.getElementById('home-date').textContent =
     `${now.getFullYear()}年${MONTHS[now.getMonth()]}${now.getDate()}日 週${WEEKDAYS[now.getDay()]}`;
-  document.getElementById('home-greeting').textContent = greeting;
+  document.getElementById('home-greeting').textContent = h<12?'早安 ☀️':h<18?'午安 🌤':'晚安 🌙';
   document.getElementById('home-time').textContent = `${countDone()} / ${TASKS.length}`;
+  document.getElementById('ring-progress').style.strokeDashoffset = 314 * (1 - countDone()/TASKS.length);
 
-  // ring
-  const pct = countDone() / TASKS.length;
-  const circ = 364;
-  document.getElementById('ring-progress').style.strokeDashoffset = circ * (1 - pct);
-
-  // task list
   const done = getTodayTasks();
-  document.getElementById('task-list-home').innerHTML = TASKS.map(t => `
-    <div class="task-item ${done[t.id] ? 'done' : ''}" onclick="goTimer('${t.id}')">
+  document.getElementById('task-list-home').innerHTML = TASKS.map(t => {
+    const ok = isDone(done[t.id]);
+    const actual = ok ? getActual(done[t.id], t.dur) : null;
+    return `<div class="task-item ${ok?'done':''}" onclick="goTimer('${t.id}')">
       <div class="task-icon">${t.emoji}</div>
       <div class="task-info">
-        <div class="task-name">${t.name}</div>
+        <div class="task-name">${t.name}${actual&&actual!==t.dur?`<span class="actual-badge">${actual}分</span>`:''}</div>
         <div class="task-dur">${t.dur} 分鐘</div>
       </div>
-      <div class="task-status">${done[t.id] ? '✅' : '○'}</div>
-    </div>
-  `).join('');
+      <div style="color:${ok?'var(--accent2)':'var(--bg3)'}; font-size:16px">${ok?'✓':'○'}</div>
+    </div>`;
+  }).join('');
 
-  // evening task list
-  const eveningDone = getTodayTasks();
-  document.getElementById('evening-task-list-home').innerHTML = EVENING_TASKS.map(t => `
-    <div class="task-item ${eveningDone[t.id] ? 'done' : ''}" onclick="goTimer('${t.id}')">
+  document.getElementById('evening-task-list-home').innerHTML = EVENING_TASKS.map(t => {
+    const ok = isDone(done[t.id]);
+    return `<div class="task-item ${ok?'done':''}" onclick="goTimer('${t.id}')">
       <div class="task-icon">${t.emoji}</div>
-      <div class="task-info">
-        <div class="task-name">${t.name}</div>
-        <div class="task-dur">${t.dur} 分鐘</div>
-      </div>
-      <div class="task-status">${eveningDone[t.id] ? '✅' : '○'}</div>
-    </div>
-  `).join('');
+      <div class="task-info"><div class="task-name">${t.name}</div><div class="task-dur">${t.dur} 分鐘</div></div>
+      <div style="color:${ok?'var(--accent2)':'var(--bg3)'}; font-size:16px">${ok?'✓':'○'}</div>
+    </div>`;
+  }).join('');
 
-  // phone ban reminder after 22:30
-  const phoneBan = document.getElementById('phone-ban-card');
   const nowH = now.getHours(), nowM = now.getMinutes();
-  const afterBan = nowH > 22 || (nowH === 22 && nowM >= 30);
-  const beforeSleep = nowH < 23 || (nowH === 23 && nowM < 30);
-  phoneBan.style.display = (afterBan && beforeSleep) ? 'block' : 'none';
+  const afterBan = nowH>22||(nowH===22&&nowM>=30), beforeSleep = nowH<23||(nowH===23&&nowM<30);
+  document.getElementById('phone-ban-card').style.display = (afterBan&&beforeSleep)?'block':'none';
 
-  // sleep countdown
   updateSleepCountdown();
-
-  // checkins
   renderCheckins();
 
-  // streak (last 7 days)
-  const s = getState();
-  const row = document.getElementById('streak-row');
+  const s = getState(), row = document.getElementById('streak-row');
   row.innerHTML = '';
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
+  for (let i=6; i>=0; i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
     const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    const tasks = s.tasks[k] || {};
-    const allDone = TASKS.every(t => tasks[t.id]);
+    const t = s.tasks[k]||{};
     const el = document.createElement('div');
-    el.className = 'streak-dot' + (allDone ? ' done' : '');
+    el.className = 'streak-dot'+(TASKS.every(task=>isDone(t[task.id]))?' done':'');
     el.textContent = WEEKDAYS[d.getDay()];
     row.appendChild(el);
   }
 }
 
 function updateSleepCountdown() {
-  const now = new Date();
-  const sleep = new Date(now);
-  sleep.setHours(23, 30, 0, 0);
-  if (now >= sleep) sleep.setDate(sleep.getDate() + 1);
-  const diff = sleep - now;
-  const h = Math.floor(diff / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-
-  const dayMs = 24 * 3600000;
-  const pct = Math.max(0, Math.min(100, ((dayMs - diff) / dayMs) * 100));
-  document.getElementById('sleep-bar').style.width = pct + '%';
+  const now = new Date(), sleep = new Date(now);
+  sleep.setHours(23,30,0,0);
+  if (now>=sleep) sleep.setDate(sleep.getDate()+1);
+  const diff = sleep-now;
+  const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000);
+  const pct = Math.max(0,Math.min(100,((86400000-diff)/86400000)*100));
+  document.getElementById('sleep-bar').style.width = pct+'%';
   document.getElementById('sleep-countdown-text').textContent = `距離睡覺還有 ${h} 小時 ${m} 分鐘`;
 }
 
-// TASKS FULL
+// ─── TASKS ──────────────────────────────────────────
 function renderTasksFull() {
   const done = getTodayTasks();
-  const morningHTML = TASKS.map((t, i) => {
-    const isDone = !!done[t.id];
-    const locked = i > 0 && !done[TASKS[i-1].id] && !isDone;
-    return `
-    <div class="card task-item ${isDone ? 'done' : locked ? '' : 'active'}"
-      onclick="${locked ? "showToast('請先完成上一項任務')" : `goTimer('${t.id}')`}"
-      style="margin-bottom:12px; cursor:${locked?'default':'pointer'}">
-      <div class="task-icon" style="background:${isDone?'rgba(93,202,165,0.15)':locked?'rgba(255,255,255,0.04)':'rgba(127,119,221,0.15)'}">
-        ${t.emoji}
-      </div>
+  const morningHTML = TASKS.map((t,i) => {
+    const ok = isDone(done[t.id]);
+    const locked = i>0 && !isDone(done[TASKS[i-1].id]) && !ok;
+    const actual = ok ? getActual(done[t.id], t.dur) : null;
+    return `<div class="card task-item ${ok?'done':''}" onclick="${locked?`showToast('請先完成上一項')`:`goTimer('${t.id}')`}"
+      style="margin-bottom:10px;cursor:${locked?'default':'pointer'};opacity:${locked?0.45:1}">
+      <div class="task-icon">${t.emoji}</div>
       <div class="task-info">
-        <div class="task-name">${locked ? '🔒 ' : ''}${t.name}</div>
+        <div class="task-name">${locked?'🔒 ':''}${t.name}${actual&&actual!==t.dur?`<span class="actual-badge">${actual}分</span>`:''}</div>
         <div class="task-dur">${t.dur} 分鐘 · ${t.desc}</div>
       </div>
-      <button class="task-check-btn ${isDone?'done':''}" onclick="toggleTaskDone('${t.id}', event)" title="${isDone?'取消完成':'標記完成'}">
-        ${isDone ? '✓' : ''}
-      </button>
+      <button class="task-check-btn ${ok?'done':''}" onclick="toggleTaskDone('${t.id}',event)">${ok?'✓':''}</button>
     </div>`;
   }).join('');
 
   const eveningHTML = EVENING_TASKS.map(t => {
-    const isDone = !!done[t.id];
-    return `
-    <div class="card task-item ${isDone ? 'done' : 'active'}"
-      onclick="goTimer('${t.id}')"
-      style="margin-bottom:12px;">
-      <div class="task-icon" style="background:${isDone?'rgba(93,202,165,0.15)':'rgba(250,199,117,0.12)'}">
-        ${t.emoji}
-      </div>
+    const ok = isDone(done[t.id]);
+    const actual = ok ? getActual(done[t.id], t.dur) : null;
+    return `<div class="card task-item ${ok?'done':''}" onclick="goTimer('${t.id}')" style="margin-bottom:10px">
+      <div class="task-icon">${t.emoji}</div>
       <div class="task-info">
-        <div class="task-name">${t.name}</div>
+        <div class="task-name">${t.name}${actual&&actual!==t.dur?`<span class="actual-badge">${actual}分</span>`:''}</div>
         <div class="task-dur">${t.dur} 分鐘 · ${t.desc}</div>
       </div>
-      <button class="task-check-btn ${isDone?'done':''}" onclick="toggleTaskDone('${t.id}', event)" title="${isDone?'取消完成':'標記完成'}">
-        ${isDone ? '✓' : ''}
-      </button>
+      <button class="task-check-btn ${ok?'done':''}" onclick="toggleTaskDone('${t.id}',event)">${ok?'✓':''}</button>
     </div>`;
   }).join('');
 
-  document.getElementById('task-list-full').innerHTML = `
-    <div class="section-title">晨間</div>
-    ${morningHTML}
-    <div class="section-title">晚間</div>
-    ${eveningHTML}
-  `;
+  document.getElementById('task-list-full').innerHTML =
+    `<div class="section-title">晨間</div>${morningHTML}<div class="section-title">晚間</div>${eveningHTML}`;
 }
 
-// TIMER
-let currentTask = null;
-let timerInterval = null;
-let timerRunning = false;
-let timeLeft = 0;
-let totalTime = 0;
+// ─── TIMER ──────────────────────────────────────────
+let currentTask=null, timerInterval=null, timerRunning=false, timeLeft=0, totalTime=0;
 
 function goTimer(id) {
   const done = getTodayTasks();
-  const allT = getAllTasks();
-  const task = allT.find(t => t.id === id);
+  const task = getAllTasks().find(t=>t.id===id);
   if (!task) return;
-
-  // morning tasks: enforce order
-  if (task.type === 'morning') {
-    const idx = TASKS.findIndex(t => t.id === id);
-    if (idx > 0 && !done[TASKS[idx-1].id]) { showToast('請先完成上一項任務'); return; }
+  if (task.type==='morning') {
+    const idx = TASKS.findIndex(t=>t.id===id);
+    if (idx>0 && !isDone(done[TASKS[idx-1].id])) { showToast('請先完成上一項'); return; }
   }
-
-  currentTask = task;
-  timeLeft = currentTask.dur * 60;
-  totalTime = timeLeft;
-  timerRunning = false;
+  currentTask=task; timeLeft=task.dur*60; totalTime=timeLeft; timerRunning=false;
   if (timerInterval) clearInterval(timerInterval);
-
-  document.getElementById('timer-emoji').textContent = currentTask.emoji;
-  document.getElementById('timer-name').textContent = currentTask.name;
-  document.getElementById('timer-sub').textContent = currentTask.desc;
+  document.getElementById('timer-emoji').textContent = task.emoji;
+  document.getElementById('timer-name').textContent = task.name;
+  document.getElementById('timer-sub').textContent = task.desc;
   document.getElementById('timer-start-btn').textContent = '開始';
-  document.getElementById('timer-done-btn').style.display = 'none';
   updateTimerDisplay();
-  showScreen('screen-timer');
-  setNav('nav-tasks');
+  showScreen('screen-timer'); setNav('nav-tasks');
 }
 
 function toggleTimer() {
   if (timerRunning) {
-    clearInterval(timerInterval);
-    timerRunning = false;
+    clearInterval(timerInterval); timerRunning=false;
     document.getElementById('timer-start-btn').textContent = '繼續';
   } else {
-    timerRunning = true;
+    timerRunning=true;
     document.getElementById('timer-start-btn').textContent = '暫停';
-    timerInterval = setInterval(() => {
+    timerInterval = setInterval(()=>{
       timeLeft--;
       updateTimerDisplay();
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        timerRunning = false;
-        document.getElementById('timer-start-btn').textContent = '開始';
-        document.getElementById('timer-done-btn').style.display = 'block';
+      if (timeLeft<=0) {
+        clearInterval(timerInterval); timerRunning=false;
+        document.getElementById('timer-start-btn').textContent = '時間到';
         showToast('時間到！');
       }
-    }, 1000);
+    },1000);
   }
 }
 
 function resetTimer() {
-  clearInterval(timerInterval);
-  timerRunning = false;
-  timeLeft = totalTime;
-  document.getElementById('timer-start-btn').textContent = '開始';
-  document.getElementById('timer-done-btn').style.display = 'none';
+  clearInterval(timerInterval); timerRunning=false; timeLeft=totalTime;
+  document.getElementById('timer-start-btn').textContent='開始';
   updateTimerDisplay();
 }
 
 function updateTimerDisplay() {
-  const m = Math.floor(timeLeft / 60);
-  const s = timeLeft % 60;
+  const m=Math.floor(timeLeft/60), s=timeLeft%60;
   document.getElementById('timer-display').textContent =
     `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  const pct = (timeLeft / totalTime) * 100;
-  document.getElementById('timer-bar').style.width = pct + '%';
+  document.getElementById('timer-bar').style.width = (timeLeft/totalTime*100)+'%';
 }
 
 function completeTask() {
   if (!currentTask) return;
-  setTaskDone(currentTask.id);
-  showToast(`${currentTask.name} 完成 ✓`);
-
-  if (currentTask.type === 'evening') {
-    showToast('睡前打坐完成，好好休息 🌙');
-    setTimeout(() => { renderHome(); showScreen('screen-home'); setNav('nav-home'); }, 1000);
+  clearInterval(timerInterval); timerRunning=false;
+  const actual = Math.max(1, Math.round((totalTime-timeLeft)/60));
+  setTaskDone(currentTask.id, actual);
+  const msg = actual!==currentTask.dur ? `${currentTask.name} ✓ 實際 ${actual} 分` : `${currentTask.name} ✓`;
+  showToast(msg);
+  if (currentTask.type==='evening') {
+    setTimeout(()=>{ renderHome(); showScreen('screen-home'); setNav('nav-home'); },800);
     return;
   }
-
-  const idx = TASKS.findIndex(t => t.id === currentTask.id);
-  const next = TASKS[idx + 1];
-  if (next) {
-    setTimeout(() => goTimer(next.id), 800);
-  } else {
-    showToast('今日晨間任務全部完成！🎉');
-    setTimeout(() => { renderHome(); showScreen('screen-home'); setNav('nav-home'); }, 1000);
-  }
+  const idx = TASKS.findIndex(t=>t.id===currentTask.id);
+  const next = TASKS[idx+1];
+  if (next) setTimeout(()=>goTimer(next.id),800);
+  else { showToast('晨間任務全部完成！'); setTimeout(()=>{ renderHome(); showScreen('screen-home'); setNav('nav-home'); },1000); }
 }
 
-// DIARY
-let selectedMoodCat = 'happy';
-let selectedWords = new Set();
+// ─── DIARY ──────────────────────────────────────────
+let selectedMoodCat='happy', selectedWords=new Set();
 
 function renderDiaryScreen() {
-  const now = new Date();
-  document.getElementById('diary-date').textContent =
-    `${now.getMonth()+1}月${now.getDate()}日 週${WEEKDAYS[now.getDay()]}`;
-
-  const cats = document.getElementById('mood-cats');
-  cats.innerHTML = Object.entries(MOODS).map(([k,v]) => `
-    <button class="mood-cat-btn ${k===selectedMoodCat?'active':''}" onclick="selectCat('${k}')">${v.label}</button>
-  `).join('');
-
+  const now=new Date();
+  document.getElementById('diary-date').textContent = `${now.getMonth()+1}月${now.getDate()}日 週${WEEKDAYS[now.getDay()]}`;
+  document.getElementById('mood-cats').innerHTML = Object.entries(MOODS).map(([k,v])=>
+    `<button class="mood-cat-btn ${k===selectedMoodCat?'active':''}" onclick="selectCat('${k}')">${v.label}</button>`
+  ).join('');
   renderMoodWords();
-
-  // restore today's diary if exists
-  const s = getState();
-  const td = (s.diary || {})[todayKey()];
+  const td = (getState().diary||{})[todayKey()];
   if (td) {
-    document.getElementById('diary-text').value = td.text || '';
-    selectedWords = new Set(td.words || []);
-    if (td.cat) { selectedMoodCat = td.cat; renderDiaryScreen(); return; }
-    if (td.phoneTotal) {
-      document.getElementById('phone-total-h').value = td.phoneTotal.h || '';
-      document.getElementById('phone-total-m').value = td.phoneTotal.m || '';
-    }
-    if (td.phoneSocial) {
-      document.getElementById('phone-social-h').value = td.phoneSocial.h || '';
-      document.getElementById('phone-social-m').value = td.phoneSocial.m || '';
-    }
+    document.getElementById('diary-text').value = td.text||'';
+    selectedWords = new Set(td.words||[]);
+    if (td.cat) { selectedMoodCat=td.cat; renderDiaryScreen(); return; }
+    if (td.phoneTotal) { document.getElementById('phone-total-h').value=td.phoneTotal.h||''; document.getElementById('phone-total-m').value=td.phoneTotal.m||''; }
+    if (td.phoneSocial) { document.getElementById('phone-social-h').value=td.phoneSocial.h||''; document.getElementById('phone-social-m').value=td.phoneSocial.m||''; }
   }
 }
 
 function selectCat(k) {
-  selectedMoodCat = k;
-  document.querySelectorAll('.mood-cat-btn').forEach(b => b.classList.remove('active'));
+  selectedMoodCat=k;
+  document.querySelectorAll('.mood-cat-btn').forEach(b=>b.classList.remove('active'));
   event.target.classList.add('active');
   renderMoodWords();
 }
 
 function renderMoodWords() {
-  const words = MOODS[selectedMoodCat].words;
-  const container = document.getElementById('mood-words');
-  container.className = `mood-words cat-${selectedMoodCat}`;
-  container.innerHTML = words.map(([w, emoji]) => `
-    <div class="mood-word ${selectedWords.has(w)?'selected':''}" onclick="toggleWord('${w}', this)">
-      <span style="margin-right:5px">${emoji}</span>${w}
-    </div>
-  `).join('');
+  const words=MOODS[selectedMoodCat].words;
+  const c=document.getElementById('mood-words');
+  c.className=`mood-words cat-${selectedMoodCat}`;
+  c.innerHTML=words.map(([w,e])=>
+    `<div class="mood-word ${selectedWords.has(w)?'selected':''}" onclick="toggleWord('${w}',this)"><span style="margin-right:4px">${e}</span>${w}</div>`
+  ).join('');
 }
 
-function spawnParticles(el, color) {
-  const rect = el.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-  for (let i = 0; i < 8; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    const angle = (i / 8) * Math.PI * 2;
-    const dist = 28 + Math.random() * 20;
-    p.style.cssText = `left:${cx}px;top:${cy}px;width:6px;height:6px;background:${color};--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;`;
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 650);
+function spawnParticles(el,color) {
+  const r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+  for(let i=0;i<6;i++){
+    const p=document.createElement('div'); p.className='particle';
+    const a=(i/6)*Math.PI*2, dist=22+Math.random()*14;
+    p.style.cssText=`left:${cx}px;top:${cy}px;width:5px;height:5px;background:${color};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist}px`;
+    document.body.appendChild(p); setTimeout(()=>p.remove(),650);
   }
 }
 
-function toggleWord(w, el) {
-  const colors = { happy:'#FAC775', calm:'#5dcaa5', low:'#afa9ec', anxious:'#f09577', angry:'#f09595' };
-  if (selectedWords.has(w)) {
-    selectedWords.delete(w);
-    el.classList.remove('selected');
-    el.classList.add('unselect-shake');
-    setTimeout(() => el.classList.remove('unselect-shake'), 300);
-  } else {
-    selectedWords.add(w);
-    el.classList.add('selected', 'pop');
-    spawnParticles(el, colors[selectedMoodCat] || '#fff');
-    setTimeout(() => el.classList.remove('pop'), 350);
-  }
+function toggleWord(w,el) {
+  const colors={happy:'#C4A882',calm:'#7B9E87',low:'#8C7D72',anxious:'#A67C5B',angry:'#A06060'};
+  if(selectedWords.has(w)){ selectedWords.delete(w); el.classList.remove('selected'); }
+  else { selectedWords.add(w); el.classList.add('selected','pop'); spawnParticles(el,colors[selectedMoodCat]||'#A67C5B'); setTimeout(()=>el.classList.remove('pop'),300); }
 }
 
-// CHECKIN
+// ─── CHECKIN ────────────────────────────────────────
 function renderCheckins() {
-  const s = getState();
-  const k = todayKey();
-  const checkins = s.checkins || {};
-  const today = checkins[k] || {};
+  const s=getState(), k=todayKey(), today=(s.checkins||{})[k]||{}, now=formatCurrentTime();
 
-  const wakeEl = document.getElementById('wakeup-checkin');
-  if (wakeEl) {
-    const woke = today.wakeup;
-    wakeEl.innerHTML = `
-      <div class="checkin-card ${woke ? 'done' : ''}">
-        <div class="checkin-info">
-          <div>⏰ 起床打卡</div>
-          <div class="checkin-time">${woke ? `實際起床 ${woke}（目標 08:30）` : '目標 08:30'}</div>
-        </div>
-        <button class="checkin-btn ${woke ? 'done' : ''}" onclick="doCheckin('wakeup')">${woke ? '已打卡' : '我起床了'}</button>
-      </div>`;
+  const wakeEl=document.getElementById('wakeup-checkin');
+  if(wakeEl) {
+    const w=today.wakeup;
+    wakeEl.innerHTML=`<div class="checkin-card ${w?'done':''}">
+      <div class="checkin-info">
+        <div class="checkin-label">⏰ 起床打卡</div>
+        <div class="checkin-time-text">${w?`實際 ${w}（目標 08:30）`:'目標 08:30'}</div>
+      </div>
+      ${w
+        ?`<button class="checkin-edit-btn" onclick="editCheckin('wakeup')">修改</button>`
+        :`<div class="checkin-actions"><input type="time" id="wakeup-time-input" value="${now}" class="time-input"><button class="checkin-btn" onclick="doCheckin('wakeup')">確認</button></div>`
+      }
+    </div>`;
   }
 
-  const sleepEl = document.getElementById('sleep-checkin');
-  if (sleepEl) {
-    const slept = today.sleep;
-    sleepEl.innerHTML = `
-      <div class="checkin-card ${slept ? 'done' : ''}">
-        <div class="checkin-info">
-          <div>🌙 睡覺打卡</div>
-          <div class="checkin-time">${slept ? `實際睡覺 ${slept}（目標 23:30）` : '目標 23:30'}</div>
-        </div>
-        <button class="checkin-btn ${slept ? 'done' : ''}" onclick="doCheckin('sleep')">${slept ? '已打卡' : '我去睡了'}</button>
-      </div>`;
+  const sleepEl=document.getElementById('sleep-checkin');
+  if(sleepEl) {
+    const sl=today.sleep;
+    sleepEl.innerHTML=`<div class="checkin-card ${sl?'done':''}">
+      <div class="checkin-info">
+        <div class="checkin-label">🌙 睡覺打卡</div>
+        <div class="checkin-time-text">${sl?`實際 ${sl}（目標 23:30）`:'目標 23:30'}</div>
+      </div>
+      ${sl
+        ?`<button class="checkin-edit-btn" onclick="editCheckin('sleep')">修改</button>`
+        :`<div class="checkin-actions"><input type="time" id="sleep-time-input" value="${now}" class="time-input"><button class="checkin-btn" onclick="doCheckin('sleep')">確認</button></div>`
+      }
+    </div>`;
   }
 }
 
 function doCheckin(type) {
-  const s = getState();
-  const k = todayKey();
-  if (!s.checkins) s.checkins = {};
-  if (!s.checkins[k]) s.checkins[k] = {};
-  const now = new Date();
-  const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  s.checkins[k][type] = timeStr;
-  saveState(s);
-  renderCheckins();
-  showToast(type === 'wakeup' ? `起床時間記錄：${timeStr} ✓` : `睡覺時間記錄：${timeStr} ✓`);
+  const inputId = type==='wakeup'?'wakeup-time-input':'sleep-time-input';
+  const el = document.getElementById(inputId);
+  const timeStr = el ? el.value : formatCurrentTime();
+  const s=getState(), k=todayKey();
+  if(!s.checkins) s.checkins={};
+  if(!s.checkins[k]) s.checkins[k]={};
+  s.checkins[k][type]=timeStr;
+  saveState(s); renderCheckins();
+  showToast(type==='wakeup'?`起床 ${timeStr} ✓`:`睡覺 ${timeStr} ✓`);
+  if(type==='wakeup') fetch(`${GAS_URL}?type=wakeup&time=${timeStr}`,{method:'GET',mode:'no-cors'}).catch(()=>{});
+}
+
+function editCheckin(type) {
+  const s=getState(), k=todayKey();
+  if(s.checkins&&s.checkins[k]) { delete s.checkins[k][type]; saveState(s); renderCheckins(); }
 }
 
 function saveDiary() {
-  const text = document.getElementById('diary-text').value.trim();
-  if (!text && selectedWords.size === 0) { showToast('請輸入一些內容'); return; }
-  const phoneTotalH = parseInt(document.getElementById('phone-total-h').value) || 0;
-  const phoneTotalM = parseInt(document.getElementById('phone-total-m').value) || 0;
-  const phoneSocialH = parseInt(document.getElementById('phone-social-h').value) || 0;
-  const phoneSocialM = parseInt(document.getElementById('phone-social-m').value) || 0;
-  const s = getState();
-  if (!s.diary) s.diary = {};
-  s.diary[todayKey()] = {
-    text, words: [...selectedWords], cat: selectedMoodCat,
-    phoneTotal: { h: phoneTotalH, m: phoneTotalM },
-    phoneSocial: { h: phoneSocialH, m: phoneSocialM },
+  const text=document.getElementById('diary-text').value.trim();
+  if(!text&&selectedWords.size===0){ showToast('請輸入一些內容'); return; }
+  const s=getState();
+  s.diary[todayKey()]={
+    text, words:[...selectedWords], cat:selectedMoodCat,
+    phoneTotal:{ h:parseInt(document.getElementById('phone-total-h').value)||0, m:parseInt(document.getElementById('phone-total-m').value)||0 },
+    phoneSocial:{ h:parseInt(document.getElementById('phone-social-h').value)||0, m:parseInt(document.getElementById('phone-social-m').value)||0 },
   };
-  saveState(s);
-  showToast('日記已儲存 ✓');
+  saveState(s); showToast('已儲存 ✓');
 }
 
-// HISTORY
+// ─── STATS & HISTORY ────────────────────────────────
+function timeToH(str) {
+  if(!str) return null;
+  const [h,m]=str.split(':').map(Number);
+  return h+m/60;
+}
+function hToStr(h) {
+  if(h===null) return '--:--';
+  const hh=Math.floor(h%24), mm=Math.round((h%1)*60);
+  return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+}
+function getWeekKeys() {
+  return Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; });
+}
+
+function renderStats() {
+  const s=getState(), wk=getWeekKeys(), tasks=s.tasks||{}, diary=s.diary||{}, checkins=s.checkins||{};
+  const W=36, GAP=6, CH=72, CW=wk.length*(W+GAP)-GAP;
+
+  // completion
+  let done=0; wk.forEach(k=>{ const t=tasks[k]||{}; done+=TASKS.filter(task=>isDone(t[task.id])).length; });
+  const pct=Math.round(done/(wk.length*TASKS.length)*100);
+
+  // streak
+  let streak=0;
+  for(let i=wk.length-1;i>=0;i--){ const t=tasks[wk[i]]||{}; if(TASKS.every(task=>isDone(t[task.id]))) streak++; else break; }
+
+  // avg wake/sleep
+  const wakes=[], sleeps=[];
+  wk.forEach(k=>{ const c=checkins[k]||{}; if(c.wakeup) wakes.push(timeToH(c.wakeup)); if(c.sleep){ let h=timeToH(c.sleep); if(h<12)h+=24; sleeps.push(h); } });
+  const avgWake=wakes.length?wakes.reduce((a,b)=>a+b,0)/wakes.length:null;
+  const avgSleep=sleeps.length?sleeps.reduce((a,b)=>a+b,0)/sleeps.length:null;
+
+  // task bar chart
+  const bars=wk.map((k,i)=>{
+    const t=tasks[k]||{}, n=TASKS.filter(task=>isDone(t[task.id])).length;
+    const bh=n>0?Math.max(6,(n/TASKS.length)*CH):4;
+    const x=i*(W+GAP), d=new Date(k+'T00:00:00');
+    const fill=n===TASKS.length?'var(--accent2)':n>0?'var(--accent3)':'var(--bg3)';
+    return `<rect x="${x}" y="${CH-bh}" width="${W}" height="${bh}" rx="3" fill="${fill}"/>
+      <text x="${x+W/2}" y="${CH+13}" text-anchor="middle" font-size="10" fill="${k===todayKey()?'var(--accent)':'var(--muted)'}" font-weight="${k===todayKey()?600:400}">${WEEKDAYS[d.getDay()]}</text>
+      ${n>0?`<text x="${x+W/2}" y="${CH-bh-4}" text-anchor="middle" font-size="10" fill="var(--muted)">${n}</text>`:''}`;
+  }).join('');
+
+  // sleep line chart
+  const MIN_H=5, MAX_H=26, LCH=72;
+  function yP(h){ if(h===null)return null; let hh=h; if(hh<12)hh+=24; return LCH-((hh-MIN_H)/(MAX_H-MIN_H))*LCH; }
+  const wPts=[], sPts=[];
+  wk.forEach((k,i)=>{ const c=checkins[k]||{}, x=i*(W+GAP)+W/2;
+    if(c.wakeup){ const y=yP(timeToH(c.wakeup)); if(y!==null) wPts.push([x,y]); }
+    if(c.sleep){ let h=timeToH(c.sleep); if(h&&h<12)h+=24; const y=yP(h); if(y!==null) sPts.push([x,y]); }
+  });
+  const mkLine=(pts,color)=>pts.length>1?`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"/>${pts.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3" fill="${color}"/>`).join('')}`:'';
+  const dayLabels=wk.map((k,i)=>{ const d=new Date(k+'T00:00:00'); return `<text x="${i*(W+GAP)+W/2}" y="${LCH+13}" text-anchor="middle" font-size="10" fill="var(--muted)">${WEEKDAYS[d.getDay()]}</text>`; }).join('');
+
+  // mood freq
+  const moodCount={};
+  Object.values(diary).forEach(d=>{ (d.words||[]).forEach(w=>{ moodCount[w]=(moodCount[w]||0)+1; }); });
+  const topMoods=Object.entries(moodCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
+
+  document.getElementById('stats-section').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value">${pct}%</div><div class="stat-label">本週完成率</div></div>
+      <div class="stat-card"><div class="stat-value">${streak}</div><div class="stat-label">連續天數</div></div>
+      <div class="stat-card"><div class="stat-value">${hToStr(avgWake)}</div><div class="stat-label">平均起床</div></div>
+      <div class="stat-card"><div class="stat-value">${hToStr(avgSleep)}</div><div class="stat-label">平均睡覺</div></div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">任務完成（本週）</div>
+      <svg width="100%" viewBox="0 0 ${CW} ${CH+18}" style="overflow:visible">${bars}</svg>
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--accent2)"></span>全完成</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--accent3)"></span>部分完成</span>
+      </div>
+    </div>
+
+    ${wPts.length+sPts.length>1?`
+    <div class="chart-wrap">
+      <div class="chart-title">作息時間（本週）</div>
+      <svg width="100%" viewBox="0 0 ${CW} ${LCH+18}" style="overflow:visible">
+        ${mkLine(wPts,'var(--accent)')}${mkLine(sPts,'var(--accent3)')}${dayLabels}
+      </svg>
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-line" style="background:var(--accent)"></span>起床</span>
+        <span class="legend-item"><span class="legend-line" style="background:var(--accent3)"></span>睡覺</span>
+      </div>
+    </div>`:''}
+
+    ${topMoods.length?`
+    <div class="chart-wrap">
+      <div class="chart-title">心情分布</div>
+      <div style="line-height:2">${topMoods.map(([w,c])=>`<span style="display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:${2+c}px ${8+c*2}px;font-size:${11+Math.min(c,3)}px;margin:3px;color:var(--text)">${w}<span style="color:var(--muted);font-size:10px;margin-left:4px">${c}</span></span>`).join('')}</div>
+    </div>`:''}
+  `;
+}
+
 function renderHistory() {
-  const s = getState();
-  const diary = s.diary || {};
-  const tasks = s.tasks || {};
-  const allKeys = [...new Set([...Object.keys(diary), ...Object.keys(tasks)])].sort().reverse();
+  renderStats();
+  const s=getState(), diary=s.diary||{}, tasks=s.tasks||{};
+  const allKeys=[...new Set([...Object.keys(diary),...Object.keys(tasks)])].sort().reverse();
+  if(allKeys.length===0){ document.getElementById('history-list').innerHTML='<p style="color:var(--muted);text-align:center;padding:40px 0;font-size:13px">還沒有任何紀錄</p>'; return; }
 
-  if (allKeys.length === 0) {
-    document.getElementById('history-list').innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px 0">還沒有任何紀錄</p>';
-    return;
-  }
-
-  document.getElementById('history-list').innerHTML = allKeys.map(k => {
-    const d = diary[k];
-    const t = tasks[k] || {};
-    const c = (s.checkins || {})[k] || {};
-    const doneCount = TASKS.filter(task => t[task.id]).length;
-    const eveDoneCount = EVENING_TASKS.filter(task => t[task.id]).length;
-    const parts = k.split('-');
-    const dateObj = new Date(+parts[0], +parts[1]-1, +parts[2]);
-    const dateStr = `${+parts[1]}月${+parts[2]}日 週${WEEKDAYS[dateObj.getDay()]}`;
-    const words = d ? d.words : [];
-    const phoneTotal = d && d.phoneTotal ? `${d.phoneTotal.h}h${d.phoneTotal.m}m` : null;
-    const phoneSocial = d && d.phoneSocial ? `${d.phoneSocial.h}h${d.phoneSocial.m}m` : null;
-
-    return `
-    <div class="history-day">
+  document.getElementById('history-list').innerHTML=allKeys.map(k=>{
+    const d=diary[k], t=tasks[k]||{}, c=(s.checkins||{})[k]||{};
+    const dc=TASKS.filter(task=>isDone(t[task.id])).length;
+    const ec=EVENING_TASKS.filter(task=>isDone(t[task.id])).length;
+    const parts=k.split('-'), dateObj=new Date(+parts[0],+parts[1]-1,+parts[2]);
+    const words=d?d.words:[];
+    const pt=d&&d.phoneTotal?`${d.phoneTotal.h}h${d.phoneTotal.m}m`:null;
+    const ps=d&&d.phoneSocial?`${d.phoneSocial.h}h${d.phoneSocial.m}m`:null;
+    return `<div class="history-day">
       <div class="history-day-header" onclick="toggleHistory('${k}')">
-        <div class="history-date">${dateStr}</div>
-        <div class="history-meta">${doneCount}/${TASKS.length} 晨間 · ${eveDoneCount}/${EVENING_TASKS.length} 晚間 ${words.length ? '· ' + words[0] : ''}</div>
+        <div>
+          <div class="history-date">${+parts[1]}月${+parts[2]}日 週${WEEKDAYS[dateObj.getDay()]}</div>
+          <div class="history-meta">${dc}/${TASKS.length} 晨間 · ${ec}/${EVENING_TASKS.length} 晚間${words.length?' · '+words[0]:''}</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="history-body" id="hist-${k}">
-        <div class="history-moods" style="margin-top:12px">
-          ${c.wakeup ? `<span class="history-mood-tag">⏰ 起床 ${c.wakeup}</span>` : ''}
-          ${c.sleep ? `<span class="history-mood-tag">🌙 睡覺 ${c.sleep}</span>` : ''}
-          ${phoneTotal ? `<span class="history-mood-tag">📱 總 ${phoneTotal}</span>` : ''}
-          ${phoneSocial ? `<span class="history-mood-tag">📲 社群 ${phoneSocial}</span>` : ''}
+        <div class="history-moods">
+          ${c.wakeup?`<span class="history-mood-tag">⏰ ${c.wakeup}</span>`:''}
+          ${c.sleep?`<span class="history-mood-tag">🌙 ${c.sleep}</span>`:''}
+          ${pt?`<span class="history-mood-tag">📱 ${pt}</span>`:''}
+          ${ps?`<span class="history-mood-tag">📲 ${ps}</span>`:''}
         </div>
         <div class="history-moods">
-          ${TASKS.map(task => `<span class="history-mood-tag">${t[task.id]?'✅':'○'} ${task.name}</span>`).join('')}
-          ${EVENING_TASKS.map(task => `<span class="history-mood-tag">${t[task.id]?'✅':'○'} ${task.name}</span>`).join('')}
+          ${TASKS.map(task=>{ const v=t[task.id],ok=isDone(v),a=ok?getActual(v,task.dur):null; return `<span class="history-mood-tag">${ok?'✓':'○'} ${task.name}${a&&a!==task.dur?` ${a}分`:''}</span>`; }).join('')}
+          ${EVENING_TASKS.map(task=>`<span class="history-mood-tag">${isDone(t[task.id])?'✓':'○'} ${task.name}</span>`).join('')}
         </div>
-        ${words.length ? `<div class="history-moods">${words.map(w=>`<span class="history-mood-tag">${w}</span>`).join('')}</div>` : ''}
-        ${d && d.text ? `<div class="history-text">${d.text}</div>` : ''}
+        ${words.length?`<div class="history-moods">${words.map(w=>`<span class="history-mood-tag">${w}</span>`).join('')}</div>`:''}
+        ${d&&d.text?`<div class="history-text">${d.text}</div>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
-function toggleHistory(k) {
-  const el = document.getElementById('hist-' + k);
-  el.classList.toggle('open');
-}
+function toggleHistory(k){ document.getElementById('hist-'+k).classList.toggle('open'); }
 
-// UI HELPERS
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if (id === 'screen-home') renderHome();
-  if (id === 'screen-diary') renderDiaryScreen();
+  if(id==='screen-home') renderHome();
+  if(id==='screen-diary') renderDiaryScreen();
 }
+function setNav(id){ document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
 
-function setNav(id) {
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+setInterval(()=>{ const s=document.querySelector('.screen.active'); if(s&&s.id==='screen-home'){ document.getElementById('home-time').textContent=`${countDone()} / ${TASKS.length}`; updateSleepCountdown(); } },60000);
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-// CLOCK UPDATE
-setInterval(() => {
-  const screen = document.querySelector('.screen.active');
-  if (screen && screen.id === 'screen-home') {
-    document.getElementById('home-time').textContent = `${countDone()} / ${TASKS.length}`;
-    updateSleepCountdown();
-  }
-}, 60000);
-
-// INIT
 renderHome();
 </script>
 </body>
